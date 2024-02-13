@@ -6,6 +6,9 @@ RUN pip install --upgrade pip
 # get curl for healthchecks
 RUN apk add curl
 
+#To define backend server port
+ENV FLASK_SERVER_PORT=8080
+
 # permissions and nonroot user for tightened security
 RUN adduser -D nonroot
 RUN mkdir /home/app/ && chown -R nonroot:nonroot /home/app
@@ -29,4 +32,4 @@ RUN pip install -r requirements.txt
 # define the port number the container should expose
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-w", "3", "-t", "60", "-b"," 0.0.0.0:8000" ,"app:app"]
